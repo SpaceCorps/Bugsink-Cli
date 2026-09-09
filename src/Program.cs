@@ -1,4 +1,5 @@
 using System.Text;
+using Bugsink.Console.Commands;
 using Bugsink.Console.Commands.Events;
 using Bugsink.Console.Commands.Issues;
 using Bugsink.Console.Commands.Projects;
@@ -93,6 +94,9 @@ app.Configure(config =>
         releases.AddCommand<CreateReleaseCommand>("create")
             .WithDescription("Create a release for a project");
     });
+
+    config.AddCommand<AgentReadmeCommand>("agent-readme")
+        .WithDescription("Print the operating manual for an LLM agent");
 
     // One line on stderr beats a stack trace: the caller is usually a script or an agent that only
     // needs to know what went wrong and that the exit code is non-zero.

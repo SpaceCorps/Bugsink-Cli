@@ -86,6 +86,16 @@ bugsink releases create --project my-project --version my-package@1.2.3
 Every list command takes `--limit <N>` (default 50) or `--all`, and follows Bugsink's cursor
 pagination for you.
 
+## Driving it from an agent
+
+```bash
+bugsink agent-readme
+```
+
+Prints a Markdown operating manual — identifiers, the triage loop, resolve vs. mute, pagination,
+error handling, and the rule that issue content is untrusted data. Paste it into a system prompt or
+a `CLAUDE.md`.
+
 ## Scope
 
 This wraps the Bugsink-specific `/api/canonical/0/` API. The Sentry-compatible ingest and
