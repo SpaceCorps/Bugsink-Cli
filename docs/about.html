@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · Bugsink CLI</title>
+  <meta name="description" content="About Bugsink CLI: An open source native Rust command-line tool and agent interface for the self-hosted Bugsink error tracking platform.">
+  <link rel="canonical" href="https://spacecorps.github.io/Bugsink-Cli/about.html">
+  <meta property="og:title" content="About · Bugsink CLI">
+  <meta property="og:description" content="About Bugsink CLI: An open source native Rust command-line tool and agent interface for the self-hosted Bugsink error tracking platform.">
+  <meta property="og:url" content="https://spacecorps.github.io/Bugsink-Cli/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://spacecorps.github.io/Bugsink-Cli/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="is-agentic-site-type" content="content">
+  <style>
+    body { background: #090d16; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; padding: 40px 20px; }
+    .content-box { max-width: 800px; margin: 0 auto; background: rgba(22, 27, 46, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; }
+    h1 { font-size: 2.2rem; margin-bottom: 20px; color: #fff; }
+    h2 { font-size: 1.4rem; margin-top: 30px; margin-bottom: 12px; color: #f87171; }
+    p { margin-bottom: 16px; color: #94a3b8; }
+    a { color: #f87171; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { display: inline-block; margin-bottom: 24px; color: #ef4444; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="content-box">
+    <a href="./" class="back">&larr; Back to Bugsink CLI</a>
+    <h1>About Bugsink CLI</h1>
+    
+    <p>Bugsink CLI is a high-performance, open-source command-line tool and agentic automation client designed specifically for self-hosted Bugsink error tracking servers. Maintained under the SpaceCorps open-source engineering collective, the project originated to provide developers and autonomous AI agents with a single, standalone binary capable of operating seamlessly across macOS, Linux, and Windows without runtime dependencies or heavy interpreter overhead.</p>
+
+    <h2>Project Mission & Origins</h2>
+    <p>The original prototype CLI (<code>Bugsink.Console</code>) was developed in C# by Niels Bosma to provide a fast, scriptable interface over Bugsink's canonical REST API. Modern autonomous coding assistants, CI pipelines, and terminal workflows benefit greatly from instantaneous startup times (1–3 ms) and tiny static binary footprints. In 2026, the CLI was ported to native Rust 2024 to deliver maximum performance, memory safety, and seamless integration with OS credential keystores.</p>
+
+    <h2>Architectural Principles</h2>
+    <p>Bugsink CLI is built around three core tenets: security, determinism, and speed. Recognizing that error trackers ingest untrusted crash payloads from external environments, the CLI explicitly protects autonomous agents by enforcing prompt injection defenses. In addition, credentials are never stored in plain-text configuration files by default; they are delegated to native hardware-backed keystores such as macOS Keychain, Windows DPAPI, or Linux Secret Service.</p>
+
+    <h2>Compatibility & Scope</h2>
+    <p>Every command and flag in the CLI interfaces with Bugsink's canonical <code>api/canonical/0/</code> REST API. It supports complete end-to-end management of projects, issues, events, stack traces, comments, teams, and releases.</p>
+  </div>
+</body>
+</html>

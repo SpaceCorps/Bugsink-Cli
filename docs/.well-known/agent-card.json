@@ -1,0 +1,17 @@
+{
+  "name": "Bugsink CLI Agent",
+  "description": "Agent interface and automated error tracking tool for self-hosted Bugsink error tracking instances.",
+  "url": "https://spacecorps.github.io/Bugsink-Cli/",
+  "version": "1.0.0",
+  "capabilities": ["error-triage", "stacktrace-analysis", "release-tracking", "issue-management"],
+  "skills": [
+    {
+      "name": "bugsink-cli",
+      "url": "https://spacecorps.github.io/Bugsink-Cli/llms.txt"
+    }
+  ],
+  "contact": {
+    "email": "contact@spacecorps.dev",
+    "url": "https://spacecorps.github.io/Bugsink-Cli/contact.html"
+  }
+}

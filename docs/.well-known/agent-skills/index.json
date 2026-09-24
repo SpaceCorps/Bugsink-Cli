@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "bugsink-cli",
+      "description": "Triage errors, inspect stack traces, resolve issues, and manage projects on self-hosted Bugsink error tracking via native Rust CLI.",
+      "type": "skill-md",
+      "url": "https://spacecorps.github.io/Bugsink-Cli/llms.txt"
+    }
+  ]
+}

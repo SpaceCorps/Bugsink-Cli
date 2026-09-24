@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bugsink CLI | Fast Native CLI for Bugsink in Rust</title>
+  <meta name="description" content="A blazing fast native command-line tool and agent interface for the self-hosted Bugsink error tracking platform, written in Rust. Triage issues, inspect stack traces, manage projects, teams and releases.">
+  <link rel="canonical" href="https://spacecorps.github.io/Bugsink-Cli/">
+  <meta name="is-agentic-site-type" content="content">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="keywords" content="Bugsink, CLI, Rust, error tracking, Sentry alternative, crash reporting, stack traces, AI agents, DevOps, developer tools">
+  <meta name="author" content="SpaceCorps">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spacecorps.github.io/Bugsink-Cli/">
+  <meta property="og:title" content="Bugsink CLI | Fast Native CLI for Bugsink in Rust">
+  <meta property="og:description" content="A blazing fast native command-line tool and agent interface for self-hosted Bugsink error tracking, written in Rust.">
+  <meta property="og:image" content="https://spacecorps.github.io/Bugsink-Cli/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bugsink CLI — Native Rust Command Line Tool">
+  <meta property="og:site_name" content="Bugsink CLI">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://spacecorps.github.io/Bugsink-Cli/">
+  <meta name="twitter:title" content="Bugsink CLI | Fast Native CLI for Bugsink in Rust">
+  <meta name="twitter:description" content="A blazing fast native command-line tool and agent interface for self-hosted Bugsink error tracking, written in Rust.">
+  <meta name="twitter:image" content="https://spacecorps.github.io/Bugsink-Cli/og-image.png">
+
+  <!-- AI Agents & Discovery -->
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Bugsink-Cli/index.md" title="Markdown Homepage">
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Bugsink-Cli/llms.txt" title="LLMs.txt">
+  <link rel="sitemap" type="application/xml" href="https://spacecorps.github.io/Bugsink-Cli/sitemap.xml" title="Sitemap">
+  <script>
+    if (new URLSearchParams(window.location.search).get('mode') === 'agent') {
+      window.location.href = 'llms.txt';
+    }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐛</text></svg>">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Bugsink CLI",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "url": "https://spacecorps.github.io/Bugsink-Cli/",
+        "description": "A blazing fast native command-line tool and agent interface for the Bugsink error tracking platform, written in Rust.",
+        "softwareVersion": "1.0.0",
+        "downloadUrl": "https://github.com/SpaceCorps/Bugsink-Cli/releases/tag/v1.0.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "SpaceCorps",
+          "url": "https://github.com/SpaceCorps"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "SpaceCorps",
+        "url": "https://github.com/SpaceCorps",
+        "sameAs": [
+          "https://github.com/SpaceCorps/Bugsink-Cli",
+          "https://github.com/SpaceCorps"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "technical support",
+          "url": "https://github.com/SpaceCorps/Bugsink-Cli/issues"
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(22, 27, 46, 0.7);
+      --bg-card-hover: rgba(30, 38, 66, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(239, 68, 68, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #ef4444;
+      --primary-hover: #dc2626;
+      --primary-glow: rgba(239, 68, 68, 0.25);
+      --accent: #f87171;
+      --success: #10b981;
+      --code-bg: #0d1117;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(239, 68, 68, 0.18), transparent),
+        radial-gradient(circle 400px at 90% 20%, rgba(248, 113, 113, 0.08), transparent);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    a:hover {
+      color: #fca5a5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      color: #fff;
+    }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: #fff !important;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid var(--border-accent);
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .install-box {
+      max-width: 580px;
+      margin: 0 auto 48px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .install-box code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: #a5f3fc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      text-align: center;
+      color: #fff;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin-bottom: 60px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 14px 20px;
+      font-weight: 600;
+      color: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fca5a5;
+      font-size: 0.85em;
+    }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      background: rgba(9, 13, 22, 0.9);
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .footer-links a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <span>🐛 Bugsink CLI</span>
+        <span class="logo-badge">Rust 2024</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="./#features">Features</a></li>
+        <li><a href="./#commands">Commands</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="auth.html">Authentication</a></li>
+        <li><a href="https://github.com/SpaceCorps/Bugsink-Cli" class="btn-github" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="pill">⚡ 1–3 ms Cold Starts · Native Rust · Zero Runtime Overhead</div>
+      <h1>High-Performance CLI for Bugsink</h1>
+      <p>A native, standalone command-line client and autonomous agent interface for self-hosted Bugsink error tracking. Triage issues, examine stack traces, resolve regressions, and automate releases directly from your terminal.</p>
+      
+      <div class="install-box">
+        <code>cargo install --git https://github.com/SpaceCorps/Bugsink-Cli --locked</code>
+      </div>
+    </section>
+
+    <section id="features" class="grid">
+      <div class="card">
+        <h3>🚀 Native Speed</h3>
+        <p>Compiled with Rust 2024, LTO, and zero async-runtime bloat. Executes in 1 to 3 milliseconds with minimal resident memory usage, ideal for CI pipelines and agent loops.</p>
+      </div>
+      <div class="card">
+        <h3>🛡️ Prompt Injection Shield</h3>
+        <p>Built with agent security at the core. Treats all issue metadata, exception messages, and crash traces strictly as data—never instructions—preventing prompt injection attacks.</p>
+      </div>
+      <div class="card">
+        <h3>🔑 OS Keystore Security</h3>
+        <p>Delegates API tokens directly to macOS Keychain, Windows DPAPI, or Linux Secret Service (libsecret). Secrets never touch plaintext configuration files without explicit opt-in.</p>
+      </div>
+      <div class="card">
+        <h3>🤖 Agentic Output Protocol</h3>
+        <p>Outputs clean, human-readable YAML by default and structured JSON with <code>--json</code>. Guarantees non-empty outputs on deletes and provides structured error envelopes on stderr.</p>
+      </div>
+      <div class="card">
+        <h3>🏢 Multi-Account Isolation</h3>
+        <p>Enforces deterministic account scoping via <code>--account &lt;name&gt;</code> (short <code>-a</code>) across multiple Bugsink servers, preventing accidental actions across production and staging.</p>
+      </div>
+      <div class="card">
+        <h3>📖 Self-Documenting Manual</h3>
+        <p>Includes built-in <code>bugsink agent-readme [--json]</code> command, exposing rules, exit codes, and operational guides directly to LLM agents with zero network roundtrips.</p>
+      </div>
+    </section>
+
+    <section id="commands">
+      <h2 class="section-title">Command Reference</h2>
+      <p class="section-subtitle">Exhaustive coverage of Bugsink canonical API endpoints</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Options & Arguments</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bugsink login</code></td>
+              <td><code>[name] [--endpoint &lt;url&gt;] [--api-token &lt;token&gt;]</code></td>
+              <td>Interactive or headless authentication storing token in OS keystore.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink accounts list</code></td>
+              <td><code>[--check]</code></td>
+              <td>List configured accounts and verify token validity against server.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink accounts test</code></td>
+              <td><code>&lt;name&gt;</code></td>
+              <td>Verify connectivity and inspect server sample response.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink accounts remove</code></td>
+              <td><code>&lt;name&gt; [--yes]</code></td>
+              <td>Remove an account and delete its token from local keystore.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues list</code></td>
+              <td><code>--project &lt;p&gt; [--status open|all|...] [--sort &lt;s&gt;]</code></td>
+              <td>List issues for a project with client-side state filtering.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues get</code></td>
+              <td><code>&lt;issue&gt;</code></td>
+              <td>Get single issue by UUID or friendly ID (e.g. <code>MYPROJECT-7</code>).</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues stacktrace</code></td>
+              <td><code>&lt;issue&gt;</code></td>
+              <td>Render the markdown stacktrace of the issue's most recent event.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues resolve</code></td>
+              <td><code>&lt;issue&gt; [--latest-release] [--next-release]</code></td>
+              <td>Mark an issue resolved, optionally release-conditional.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues reopen</code></td>
+              <td><code>&lt;issue&gt;</code></td>
+              <td>Mark a resolved issue unresolved again.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues mute</code></td>
+              <td><code>&lt;issue&gt; [--for &lt;n&gt; --period &lt;p&gt;] [--threshold &lt;n&gt;]</code></td>
+              <td>Mute an issue permanently, for a duration, or until noisy.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues unmute</code></td>
+              <td><code>&lt;issue&gt;</code></td>
+              <td>Unmute an issue.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues comment</code></td>
+              <td><code>&lt;issue&gt; (--text &lt;t&gt; | --stdin)</code></td>
+              <td>Add a comment to an issue (stdin recommended for multi-line).</td>
+            </tr>
+            <tr>
+              <td><code>bugsink issues delete</code></td>
+              <td><code>&lt;issue&gt;</code></td>
+              <td>Permanently delete an issue and all of its events.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink events list</code></td>
+              <td><code>--issue &lt;issue&gt; [--order asc|desc]</code></td>
+              <td>List stored events of an issue.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink events get</code></td>
+              <td><code>&lt;event&gt; [--no-data]</code></td>
+              <td>Get event details; <code>--no-data</code> omits heavy SDK payload.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink events stacktrace</code></td>
+              <td><code>&lt;event&gt;</code></td>
+              <td>Fetch and render raw markdown stacktrace for an event.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink projects list</code></td>
+              <td><code>[--team &lt;team&gt;]</code></td>
+              <td>List projects with DSNs and event counts.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink projects get</code></td>
+              <td><code>&lt;project&gt; [--expand-team]</code></td>
+              <td>Get project by numeric ID, slug, or name.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink projects create</code></td>
+              <td><code>--team &lt;t&gt; --name &lt;n&gt; [--visibility &lt;v&gt;]</code></td>
+              <td>Create a project in a team with alert and retention options.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink projects update</code></td>
+              <td><code>&lt;project&gt; [--name &lt;n&gt;] [--retention &lt;n&gt;]</code></td>
+              <td>Update project name, owning team, visibility, or alerts.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink teams list</code></td>
+              <td><code>[--all] [--limit &lt;n&gt;]</code></td>
+              <td>List all teams across the organization.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink teams create</code></td>
+              <td><code>--name &lt;n&gt; [--visibility &lt;v&gt;]</code></td>
+              <td>Create a new team.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink releases list</code></td>
+              <td><code>--project &lt;project&gt;</code></td>
+              <td>List releases for a project.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink releases create</code></td>
+              <td><code>--project &lt;p&gt; --version &lt;v&gt; [--timestamp &lt;t&gt;]</code></td>
+              <td>Register a release version for regression tracking.</td>
+            </tr>
+            <tr>
+              <td><code>bugsink agent-readme</code></td>
+              <td><code>[--json]</code></td>
+              <td>Output comprehensive agent manual and exit code mappings.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div>
+        <p>&copy; 2026 SpaceCorps. Released under the MIT License.</p>
+        <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 4px;">Based on Niels Bosma's Bugsink.Console prototype, ported to native Rust.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="pricing.md">Pricing & Licensing</a></li>
+        <li><a href="auth.md">Authentication</a></li>
+        <li><a href="https://spacecorps.github.io/Bugsink-Cli/llms.txt">llms.txt</a></li>
+        <li><a href="https://github.com/SpaceCorps/Bugsink-Cli">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
