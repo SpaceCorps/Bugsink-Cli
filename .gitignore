@@ -4,3 +4,5 @@ obj/
 *.suo
 .vs/
 nupkgs/
+target/
+.DS_Store
